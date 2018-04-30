@@ -1,6 +1,7 @@
 plugins {
+    `application`
     `build-scan`
-    kotlin("jvm") version "1.2.40"
+    kotlin("jvm") version "1.2.41"
 }
 
 group = "io.github.thenumberone"
@@ -10,8 +11,8 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib", "1.2.40"))
-    testImplementation("junit:junit:4.12")
+    implementation(kotlin("stdlib", "1.2.41"))
+	testCompile("junit:junit:4.12")
 }
 
 //println(java.sourceSets["main"]["kotlin"])
@@ -21,4 +22,8 @@ buildScan {
     setLicenseAgree("yes")
 
     publishAlways() 
+}
+
+application {
+    mainClassName = "io.github.thenumberone.ai2048.MainKt"
 }
