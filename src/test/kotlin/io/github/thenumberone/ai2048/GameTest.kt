@@ -235,4 +235,33 @@ class GameTest {
         
         assertThrows<IllegalArgumentException> { g.placeTile(0, 1, 2) }
     }
+    
+    @Test
+    fun placeTileDoesntAffectOriginal() {
+        var original = Game(
+            0, 0,
+            0, 0)
+        var g = Game(
+            0, 0,
+            0, 0)
+        
+        var newG = g.placeTile(0, 0, 2)
+        assertEquals(original, g)
+        assertEquals(Tile.Num(2), newG[0, 0])
+    }
+    
+    @Test
+    fun slideDoesntAffectOriginal() {
+        var original = Game(
+            2, 0,
+            0, 0)
+        var g = Game(
+            2, 0,
+            0, 0)
+        
+        var newG = g.slide(SlideDirection.RIGHT)
+        assertEquals(original, g)
+        assertEquals(Tile.Num(2), newG[0, 1])
+        assertEquals(Tile.Empty, newG[0, 0])
+    }
 }

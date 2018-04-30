@@ -202,7 +202,7 @@ data class Game constructor(
         require(this[row, col] is Tile.Empty) { "You can only place on empty tiles" }
         require(tile.num == 2 || tile.num == 4) { "Tile must be a 2 or 4" }
         
-        val newTiles = tiles.copyOf()
+        val newTiles = Array(width) { tiles[it].copyOf() }
         newTiles[row][col] = tile
         
         return copy(tiles = newTiles, nextTurnIsSlide = nextTurnIsSlide?.not())
