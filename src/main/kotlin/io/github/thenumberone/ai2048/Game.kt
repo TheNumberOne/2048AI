@@ -2,6 +2,7 @@ package io.github.thenumberone.ai2048
 
 import kotlin.math.*
 import java.util.Objects
+import java.util.Random
 
 enum class SlideDirection {
     UP, DOWN, LEFT, RIGHT
@@ -122,7 +123,7 @@ data class Game constructor(
     }
     
     fun canSlideAtAll(): Boolean {
-        return tiles.any { row -> row.any { it is Tile.Empty } }
+        return SlideDirection.values().any { canSlide(it) }
     }
     
     fun slide(direction: SlideDirection): Game {
@@ -210,6 +211,32 @@ data class Game constructor(
     
     fun placeTile(row: Int, col: Int, tile: Int) = placeTile(row, col, Tile.Num(tile))
     
+    fun placeTile(random: Random): Game {
+        var chosenI = 0
+        var chosenJ = 0
+        var seenSoFar = 0
+        
+        for (i in 0 until width) {
+            for (j in 0 until width) {
+                if (this[i, j] == Tile.Empty) {
+                    seenSoFar += 1
+                    if (random.nextInt(seenSoFar) == 0) {
+                        chosenI = i
+                        chosenJ = j
+                    }
+                }
+            }
+        }
+        val tile = if (random.nextInt(10) == 0) 4 else 2
+        
+        return placeTile(chosenI, chosenJ, tile)
+    }
+    
+    fun doMove(move: Move) = when(move) {
+        is Slide -> slide(move.direction)
+        is PlaceTile -> placeTile(move.row, move.col, move.tile) 
+    }
+    
     override fun toString(): String {
         return "Game(width = $width, tiles = ${tiles.contentDeepToString()}, nextTurnIsSlide = $nextTurnIsSlide)"
     }
@@ -226,5 +253,18 @@ data class Game constructor(
     
     override fun hashCode(): Int {
         return Objects.hash(width, tiles.contentDeepHashCode(), nextTurnIsSlide)
+    }
+}
+
+sealed class Move
+data class Slide(val direction: SlideDirection): Move()
+data class PlaceTile(val row: Int, val col: Int, val tile: Tile.Num): Move()
+{
+    init {
+        require(tile.num == 2 || tile.num == 4) { "Tile must be 2 or 4. Not $tile.num" }
+    }
+    
+    constructor(row: Int, col: Int, tile: Int): this(row, col, Tile.Num(tile))
+    {
     }
 }

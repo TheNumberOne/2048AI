@@ -264,4 +264,18 @@ class GameTest {
         assertEquals(Tile.Num(2), newG[0, 1])
         assertEquals(Tile.Empty, newG[0, 0])
     }
+    
+    @Test
+    fun doesMoves() {
+        var g = Game(
+            2, 2,
+            2, 0)
+        
+        g = g.doMove(Slide(SlideDirection.RIGHT))
+        g = g.doMove(PlaceTile(1, 0, 4))
+        
+        assertEquals(Game(
+            0, 4,
+            4, 2), g)
+    }
 }
